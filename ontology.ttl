@@ -1,0 +1,366 @@
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix ein:  <http://eindhoven.nl/livability/> .
+
+# Classes ---------------------------------------------------------------------------------------
+
+ein:Neighborhood a rdfs:Class ;
+    rdfs:label "Neighborhood" ;
+    rdfs:comment "A recognized neighborhood within the municipality of Eindhoven." .
+
+ein:Observation a rdfs:Class ;
+    rdfs:label "Observation" ;
+    rdfs:comment "A set of livability indicators recorded for one neighborhood in one year." .
+
+# Properties ----------------------------------------------------------------------------------------
+
+ein:hasObservation a rdf:Property ;
+    rdfs:label "has observation" ;
+    rdfs:domain ein:Neighborhood ;
+    rdfs:range  ein:Observation .
+
+ein:inNeighborhood a rdf:Property ;
+    rdfs:label "in neighborhood" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  ein:Neighborhood .
+
+# Join Key ----------------------------------------------------------------------------------------
+
+ein:hasName a rdf:Property ;
+    rdfs:label "name" ;
+    rdfs:domain ein:Neighborhood ;
+    rdfs:range  xsd:string .
+
+ein:inYear a rdf:Property ;
+    rdfs:label "year" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:integer .
+
+# Leefbaarometer ---------------------------------------------------------------------------------------- 
+
+ein:livabilityScore a rdf:Property ;
+    rdfs:label "livability score" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:livabilityDeviation a rdf:Property ;
+    rdfs:label "deviation from national average" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:physicalEnvironmentDeviation a rdf:Property ;
+    rdfs:label "physical environment sub-dimension deviation" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:nuisanceInsecurityDeviation a rdf:Property ;
+    rdfs:label "nuisance and insecurity sub-dimension deviation" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:socialCohesionDeviation a rdf:Property ;
+    rdfs:label "social cohesion sub-dimension deviation" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:facilitiesDeviation a rdf:Property ;
+    rdfs:label "facilities sub-dimension deviation" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:housingStockDeviation a rdf:Property ;
+    rdfs:label "housing stock sub-dimension deviation" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+# Facilities ---------------------------------------------------------------------------------------- 
+
+ein:distSupermarket a rdf:Property ;
+    rdfs:label "distance to supermarket (km)" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:distDailyGroceries a rdf:Property ;
+    rdfs:label "distance to daily groceries (km)" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:distHospital a rdf:Property ;
+    rdfs:label "distance to hospital (km)" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:distGpPractice a rdf:Property ;
+    rdfs:label "distance to GP practice (km)" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:distGpPost a rdf:Property ;
+    rdfs:label "distance to GP post (km)" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:distPharmacy a rdf:Property ;
+    rdfs:label "distance to pharmacy (km)" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:distPrimarySchool a rdf:Property ;
+    rdfs:label "distance to primary school (km)" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:distSecondarySchool a rdf:Property ;
+    rdfs:label "distance to secondary school (km)" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:distDaycare a rdf:Property ;
+    rdfs:label "distance to daycare (km)" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:distAfterSchoolCare a rdf:Property ;
+    rdfs:label "distance to after school care (km)" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:distTrainStation a rdf:Property ;
+    rdfs:label "distance to train station (km)" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:distHighwayRamp a rdf:Property ;
+    rdfs:label "distance to highway ramp (km)" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:distLibrary a rdf:Property ;
+    rdfs:label "distance to library (km)" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:distMuseum a rdf:Property ;
+    rdfs:label "distance to museum (km)" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:distCinema a rdf:Property ;
+    rdfs:label "distance to cinema (km)" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:distAttraction a rdf:Property ;
+    rdfs:label "distance to attraction (km)" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:distPerformingArts a rdf:Property ;
+    rdfs:label "distance to performing arts (km)" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:distCafe a rdf:Property ;
+    rdfs:label "distance to cafe (km)" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:distCafeteria a rdf:Property ;
+    rdfs:label "distance to cafeteria (km)" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:distRestaurant a rdf:Property ;
+    rdfs:label "distance to restaurant (km)" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:distSwimmingPool a rdf:Property ;
+    rdfs:label "distance to swimming pool (km)" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:distIceRink a rdf:Property ;
+    rdfs:label "distance to ice rink (km)" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:distSauna a rdf:Property ;
+    rdfs:label "distance to sauna (km)" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+# Housing Stock ---------------------------------------------------------------------------------------
+
+ein:rentalDwellings a rdf:Property ;
+    rdfs:label "proportion of rental dwellings" ;
+    rdfs:comment "Share of dwellings that are rental, expressed as a decimal between 0 and 1." ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:ownerOccupiedDwellings a rdf:Property ;
+    rdfs:label "proportion of owner-occupied dwellings" ;
+    rdfs:comment "Share of dwellings that are owner-occupied, expressed as a decimal between 0 and 1." ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:corporationDwellings a rdf:Property ;
+    rdfs:label "proportion of corporation dwellings" ;
+    rdfs:comment "Share of dwellings owned by housing corporations, expressed as a decimal between 0 and 1." ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:totalDwellings a rdf:Property ;
+    rdfs:label "total number of dwellings" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:integer .
+
+ein:pctOccupied a rdf:Property ;
+    rdfs:label "percentage of dwellings occupied, expressed as a decimal between 0 and 1." ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:avgWozValue a rdf:Property ;
+    rdfs:label "average WOZ property value (euros)" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+# Nuisance and Safety ---------------------------------------------------------------------------------------- 
+
+ein:pctFeelsUnsafe a rdf:Property ;
+    rdfs:label "percentage feeling unsafe, expressed as a decimal between 0 and 1." ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:pctPerceivesCrime a rdf:Property ;
+    rdfs:label "percentage perceiving high crime, expressed as a decimal between 0 and 1." ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:safetyRating a rdf:Property ;
+    rdfs:label "resident safety rating" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:pctNoiseRoadTraffic a rdf:Property ;
+    rdfs:label "percentage disturbed by road traffic noise, expressed as a decimal between 0 and 1." ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:pctNoiseRailTraffic a rdf:Property ;
+    rdfs:label "percentage disturbed by rail traffic noise, expressed as a decimal between 0 and 1." ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:pctNoiseAirTraffic a rdf:Property ;
+    rdfs:label "percentage disturbed by air traffic noise, expressed as a decimal between 0 and 1." ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:pctNoiseBusiness a rdf:Property ;
+    rdfs:label "percentage disturbed by business noise, expressed as a decimal between 0 and 1." ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:pctNoiseEvents a rdf:Property ;
+    rdfs:label "percentage disturbed by event noise, expressed as a decimal between 0 and 1." ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:pctNoiseNeighbors a rdf:Property ;
+    rdfs:label "percentage disturbed by neighbor noise, expressed as a decimal between 0 and 1." ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:pctPollutedAir a rdf:Property ;
+    rdfs:label "percentage experiencing polluted air, expressed as a decimal between 0 and 1." ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:pctBadSmell a rdf:Property ;
+    rdfs:label "percentage experiencing bad smell, expressed as a decimal between 0 and 1." ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:pctAnyNoise a rdf:Property ;
+    rdfs:label "percentage experiencing any noise nuisance, expressed as a decimal between 0 and 1." ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+# Physical Environment ---------------------------------------------------------------------------------------- 
+
+ein:addressDensity a rdf:Property ;
+    rdfs:label "address density (addresses per km²)" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:integer .
+
+ein:urbanityClass a rdf:Property ;
+    rdfs:label "CBS urbanity class" ;
+    rdfs:comment "Urbanity classification assigned by CBS: Very strongly urban, Strongly urban, Moderately urban, Slightly urban, or Not urban." ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:string .
+
+ein:areaWaterHa a rdf:Property ;
+    rdfs:label "water surface area (hectares)" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:areaLandHa a rdf:Property ;
+    rdfs:label "land surface area (hectares)" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:areaTotalHa a rdf:Property ;
+    rdfs:label "total surface area (hectares)" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+# Social Cohesion ----------------------------------------------------------------------------------------- 
+
+ein:cohesionScaleScore a rdf:Property ;
+    rdfs:label "social cohesion scale score" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:pctActivelyEngaged a rdf:Property ;
+    rdfs:label "percentage actively engaged in neighborhood, expressed as a decimal between 0 and 1." ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:pctWantsToEngage a rdf:Property ;
+    rdfs:label "percentage wanting to engage in future, expressed as a decimal between 0 and 1." ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+ein:pctMaybeEngage a rdf:Property ;
+    rdfs:label "percentage possibly wanting to engage in future, expressed as a decimal between 0 and 1." ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:decimal .
+
+# Population ----------------------------------------------------------------------------------------- 
+
+ein:population a rdf:Property ;
+    rdfs:label "total population count" ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:integer .
+
+# Flags ----------------------------------------------------------------------------------------- 
+
+ein:dimensionScoresAvailable a rdf:Property ;
+    rdfs:label "dimension scores available" ;
+    rdfs:comment "True if Leefbaarometer 3.0 sub-dimension scores were computed for this year." ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:boolean .
+
+ein:surveyAvailable a rdf:Property ;
+    rdfs:label "survey available" ;
+    rdfs:comment "True if Nuisance and Safety perception survey indicators are present for this year." ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:boolean .
+
+ein:engagementAvailable a rdf:Property ;
+    rdfs:label "engagement available" ;
+    rdfs:comment "True if Social Cohesion engagement percentage indicators are present for this year." ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:boolean .
