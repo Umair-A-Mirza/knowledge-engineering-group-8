@@ -19,26 +19,57 @@ PREFIX ein: <http://eindhoven.nl/livability/>
 
 SELECT ?year
        (AVG(?livabilityScore) as ?avgLivability)
+       (AVG(?livabilityDeviation) as ?avgLivabilityDeviation)
        (AVG(?population) as ?avgPopulation)
        (AVG(?safetyRating) as ?avgSafety)
        (AVG(?cohesionScore) as ?avgCohesion)
        (AVG(?avgWozValue) as ?avgWoz)
        (AVG(?totalDwellings) as ?avgTotalDwellings)
        (AVG(?pctUnsafe) as ?avgPctUnsafe)
-       (AVG(?facilitiesDeviation) as ?avgFacilitiesDeviation)
-       (AVG(?housingDeviation) as ?avgHousingDeviation)
+       (AVG(?physicalDev) as ?avgPhysicalDeviation)
+       (AVG(?nuisanceDev) as ?avgNuisanceDeviation)
+       (AVG(?socialDev) as ?avgSocialDeviation)
+       (AVG(?facilitiesDev) as ?avgFacilitiesDeviation)
+       (AVG(?housingDev) as ?avgHousingDeviation)
+       (SAMPLE(?dimFlag) as ?dimensionScoresAvailable)
+       (SAMPLE(?surveyFlag) as ?surveyAvailable)
+       (SAMPLE(?wozFlag) as ?wozAvailable)
 WHERE {
     ?obs a ein:Observation ;
          ein:inYear ?year ;
          ein:population ?population .
+
     OPTIONAL { ?obs ein:livabilityScore ?livabilityScore . }
-    OPTIONAL { ?obs ein:safetyRating ?safetyRating . }
-    OPTIONAL { ?obs ein:cohesionScaleScore ?cohesionScore . }
-    OPTIONAL { ?obs ein:avgWozValue ?avgWozValue . }
+    OPTIONAL { ?obs ein:livabilityDeviation ?livabilityDeviation . }
     OPTIONAL { ?obs ein:totalDwellings ?totalDwellings . }
-    OPTIONAL { ?obs ein:pctFeelsUnsafe ?pctUnsafe . }
-    OPTIONAL { ?obs ein:facilitiesDeviation ?facilitiesDeviation . }
-    OPTIONAL { ?obs ein:housingStockDeviation ?housingDeviation . }
+    OPTIONAL { ?obs ein:dimensionScoresAvailable ?dimFlag . }
+    OPTIONAL { ?obs ein:surveyAvailable ?surveyFlag . }
+    OPTIONAL { ?obs ein:wozAvailable ?wozFlag . }
+
+    OPTIONAL {
+        ?obs ein:dimensionScoresAvailable true ;
+             ein:physicalEnvironmentDeviation ?physicalDev ;
+             ein:nuisanceInsecurityDeviation ?nuisanceDev ;
+             ein:socialCohesionDeviation ?socialDev ;
+             ein:facilitiesDeviation ?facilitiesDev ;
+             ein:housingStockDeviation ?housingDev .
+    }
+
+    OPTIONAL {
+        ?obs ein:surveyAvailable true ;
+             ein:safetyRating ?safetyRating ;
+             ein:pctFeelsUnsafe ?pctUnsafe .
+    }
+
+    OPTIONAL {
+        ?obs ein:surveyAvailable true ;
+             ein:cohesionScaleScore ?cohesionScore .
+    }
+
+    OPTIONAL {
+        ?obs ein:wozAvailable true ;
+             ein:avgWozValue ?avgWozValue .
+    }
 }
 GROUP BY ?year
 ORDER BY ?year
@@ -50,7 +81,49 @@ The goal of this query is to provide an overview of core components and how they
 - We can plot all features normalized to the same scale (0–1) on a single line chart with year on the x-axis to visualize which features move together with livability.
 - Identify which years show the largest drops in livability and check whether population, dwellings, or safety moved in the same period.
 
-#### Query 2 - Year-over-Year Differences
+#### Query 2 - Weighted Average Scores Per Year
+
+```
+PREFIX ein: <http://eindhoven.nl/livability/>
+
+SELECT ?year
+       (SUM(?livabilityScore * ?population) / SUM(?population) as ?weightedAvgLivability)
+       (SUM(?livabilityDeviation * ?population) / SUM(?population) as ?weightedAvgDeviation)
+       (SUM(?facilitiesDev * ?population) / SUM(?population) as ?weightedFacilitiesDeviation)
+       (SUM(?housingDev * ?population) / SUM(?population) as ?weightedHousingDeviation)
+       (SUM(?safetyRating * ?population) / SUM(?population) as ?weightedSafetyRating)
+       (SUM(?pctUnsafe * ?population) / SUM(?population) as ?weightedPctUnsafe)
+       (SUM(?population) as ?totalPopulation)
+WHERE {
+    ?obs a ein:Observation ;
+         ein:inNeighborhood ?nb ;
+         ein:inYear ?year ;
+         ein:population ?population ;
+         ein:livabilityScore ?livabilityScore .
+
+    OPTIONAL { ?obs ein:livabilityDeviation ?livabilityDeviation . }
+    OPTIONAL {
+        ?obs ein:dimensionScoresAvailable true ;
+             ein:facilitiesDeviation ?facilitiesDev ;
+             ein:housingStockDeviation ?housingDev .
+    }
+    OPTIONAL {
+        ?obs ein:surveyAvailable true ;
+             ein:safetyRating ?safetyRating ;
+             ein:pctFeelsUnsafe ?pctUnsafe .
+    }
+}
+GROUP BY ?year
+ORDER BY ?year
+```
+
+The goal of this query is to provide a comparison of the average annual livability score from Query 1 to a weighted average (weighted by population of neighborhood) annual livability score. 
+
+**Analysis** - 
+- We can make a simple plot of this score over time and also with the total population too, in order to compare with the average livability score from Query 1.
+- Determine whether neighborhoods with larger populations are generally more livable.
+
+#### Query 3 - Year-over-Year Differences
 
 ```
 PREFIX ein: <http://eindhoven.nl/livability/>
@@ -107,28 +180,36 @@ The goal of this query is to provide aligned deltas per neighborhood in consecut
 - Check whether dwellingsDelta keeps pace with populationDelta because if population grows faster than dwellings, it suggests housing supply is not meeting demand, which could explain livability decline.
 - Compare facilitiesDeviationDelta against populationDelta because if facilities deteriorate relative to the national average as population grows, it supports the infrastructure scaling hypothesis.
 
-#### Query 3 - National Average Comparison
+#### Query 4 - National Average Comparison
 
 ```
 PREFIX ein: <http://eindhoven.nl/livability/>
 
 SELECT ?year
        (AVG(?livabilityScore) as ?avgLivability)
+       (AVG(?livabilityDeviation) as ?avgLivabilityDeviation)
        (AVG(?physicalDev) as ?avgPhysicalDeviation)
        (AVG(?nuisanceDev) as ?avgNuisanceDeviation)
        (AVG(?socialDev) as ?avgSocialDeviation)
        (AVG(?facilitiesDev) as ?avgFacilitiesDeviation)
        (AVG(?housingDev) as ?avgHousingDeviation)
+       (SAMPLE(?dimFlag) as ?dimensionScoresAvailable)
 WHERE {
     ?obs a ein:Observation ;
-         ein:inYear ?year .
-    OPTIONAL { ?obs ein:livabilityScore ?livabilityScore . }
-    OPTIONAL { ?obs ein:physicalEnvironmentDeviation ?physicalDev . }
-    OPTIONAL { ?obs ein:nuisanceInsecurityDeviation ?nuisanceDev . }
-    OPTIONAL { ?obs ein:socialCohesionDeviation ?socialDev . }
-    OPTIONAL { ?obs ein:facilitiesDeviation ?facilitiesDev . }
-    OPTIONAL { ?obs ein:housingStockDeviation ?housingDev . }
-    FILTER EXISTS { ?obs ein:livabilityScore ?livabilityScore . }
+         ein:inYear ?year ;
+         ein:livabilityScore ?livabilityScore .
+
+    OPTIONAL { ?obs ein:livabilityDeviation ?livabilityDeviation . }
+    OPTIONAL { ?obs ein:dimensionScoresAvailable ?dimFlag . }
+
+    OPTIONAL {
+        ?obs ein:dimensionScoresAvailable true ;
+             ein:physicalEnvironmentDeviation ?physicalDev ;
+             ein:nuisanceInsecurityDeviation ?nuisanceDev ;
+             ein:socialCohesionDeviation ?socialDev ;
+             ein:facilitiesDeviation ?facilitiesDev ;
+             ein:housingStockDeviation ?housingDev .
+    }
 }
 GROUP BY ?year
 ORDER BY ?year
@@ -140,7 +221,7 @@ The goal of this query is to returns measurement years where livability exists, 
 - We can profile the livability in Eindhoven by identifying if sub-dimensions are consistently negative across measurement years.
 - Check whether any sub-dimension shows a worsening trend over time.
 
-#### Query 4 - Fastest Improving and Declining Neighborhoods
+#### Query 5 - Fastest Improving and Declining Neighborhoods
 
 ```
 PREFIX ein: <http://eindhoven.nl/livability/>
@@ -150,6 +231,22 @@ SELECT ?neighborhood
        (MAX(?livabilityScore) as ?maxScore)
        (MAX(?livabilityScore) - MIN(?livabilityScore) as ?scoreRange)
        (AVG(?livabilityScore) as ?avgScore)
+       (SAMPLE(?urbanityClass) as ?urbanityClass)
+WHERE {
+    ?obs a ein:Observation ;
+         ein:inNeighborhood ?nb ;
+         ein:inYear ?year ;
+         ein:livabilityScore ?livabilityScore .
+    ?nb ein:hasName ?neighborhood .
+    OPTIONAL { ?obs ein:urbanityClass ?urbanityClass . }
+}
+GROUP BY ?neighborhood
+ORDER BY DESC(?scoreRange)
+LIMIT 20
+
+PREFIX ein: <http://eindhoven.nl/livability/>
+
+SELECT ?neighborhood ?year ?livabilityScore
 WHERE {
     ?obs a ein:Observation ;
          ein:inNeighborhood ?nb ;
@@ -157,9 +254,7 @@ WHERE {
          ein:livabilityScore ?livabilityScore .
     ?nb ein:hasName ?neighborhood .
 }
-GROUP BY ?neighborhood
-ORDER BY DESC(?scoreRange)
-LIMIT 20
+ORDER BY ?neighborhood ?year
 ```
 
 The goal of this query is to identify the 20 neighborhoods with the largest livability score range across all measurement years, capturing both the fastest improvers and most severe decliners.
@@ -168,7 +263,7 @@ The goal of this query is to identify the 20 neighborhoods with the largest liva
 - Check whether the highest-volatility neighborhoods cluster in a particular urbanity class or area of Eindhoven
 - Cross-reference declining neighborhoods with the Query 2 population deltas to see if the neighborhoods with the largest livability drops show the largest population increases.
 
-#### Query 5 - Urbanity Class Comparison
+#### Query 6 - Urbanity Class Comparison
 
 ```
 PREFIX ein: <http://eindhoven.nl/livability/>

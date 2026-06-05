@@ -222,7 +222,7 @@ ein:pctOccupied a rdf:Property ;
     rdfs:range  xsd:decimal .
 
 ein:avgWozValue a rdf:Property ;
-    rdfs:label "average WOZ property value (euros)" ;
+    rdfs:label "average WOZ property value (euro thousands)" ;
     rdfs:domain ein:Observation ;
     rdfs:range  xsd:decimal .
 
@@ -362,5 +362,11 @@ ein:surveyAvailable a rdf:Property ;
 ein:engagementAvailable a rdf:Property ;
     rdfs:label "engagement available" ;
     rdfs:comment "True if Social Cohesion engagement percentage indicators are present for this year." ;
+    rdfs:domain ein:Observation ;
+    rdfs:range  xsd:boolean .
+
+ein:wozAvailable a rdf:Property ;
+    rdfs:label "WOZ value available" ;
+    rdfs:comment "True if the WOZ property value is available for this neighborhood-year." ;
     rdfs:domain ein:Observation ;
     rdfs:range  xsd:boolean .
